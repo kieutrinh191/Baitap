@@ -1,0 +1,65 @@
+SELECT [Dim Region].[Region].[Region] ON COLUMNS,
+	NONEMPTY ([Dim Product].[Product].[Product]) ON ROWS
+FROM [45K211 Star Schema]
+WHERE [Measures].[Sales]
+
+--1. Total Sales
+SELECT [Measures].[Sales] ON COLUMNS
+FROM [45K211 Star Schema]
+
+--2a.Total Sales by Region
+SELECT [Measures].[Sales] ON COLUMNS,
+[Dim Region].[Region].[Region].[East] on rows
+FROM [45K211 Star Schema]
+
+
+--3. Total Sales by Year
+SELECT [Measures].[Sales] ON COLUMNS,
+[Dim Time].[Year].[Year] ON ROWS
+FROM [45K211 Star Schema]
+
+
+--4. Total Sales by Year (skip null value)
+SELECT [Measures].[Sales] ON COLUMNS,
+	NONEMPTY ([Dim Time].[Year].[Year]) ON ROWS
+FROM [45K211 Star Schema]
+
+
+--5. Total Sales by Year of West
+SELECT [Measures].[Sales] ON COLUMNS,
+	NONEMPTY ([Dim Time].[Year].[Year]) ON ROWS
+FROM [45K211 Star Schema]
+WHERE [Dim Region].[Region].&[West]
+
+
+--6. Total Sales and Profit by Year (skip null value)
+SELECT {[Measures].[Sales], [profit]} ON COLUMNS,
+	NONEMPTY ([Dim Time].[Year].[Year]) ON ROWS
+FROM [45K211 Star Schema]
+
+
+--7. Total Sales by Year and Supplier
+SELECT	NONEMPTY ([Dim Product].[Supplier].[Supplier]) ON ROWS,
+		NONEMPTY ([Dim Time].[Year].[Year]) ON COLUMNS
+FROM [45K211 Star Schema]
+WHERE [Measures].[Sales];
+
+
+--8. Total Sales by Month and Product
+SELECT	NONEMPTY ([Dim Product].[Product].[Product]) ON COLUMNS,
+		NONEMPTY ([Dim Time].[Month].[Month]) ON ROWS
+FROM [45K211 Star Schema]
+WHERE [Measures].[Sales];
+
+
+--9. Total Sales and Profit by City
+SELECT {[Measures].[Sales], [Profit]} ON COLUMNS,
+	NONEMPTY ([Dim Customer].[City].[City]) ON ROWS
+FROM [45K211 Star Schema]
+
+
+--10. Total Sales by WeekDay and Region
+SELECT [Measures].[Sales] ON COLUMNS,
+	NONEMPTY ([Dim Time].[Weekday].[Weekday]) ON ROWS
+FROM [45K211 Star Schema]
+WHERE [Dim Region].[Region].[Region]
